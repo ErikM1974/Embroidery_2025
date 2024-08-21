@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embroidery Price Calculator</title>
+    <style>
+        :root {
+            --primary-color: #28a745;
+            --primary-hover: #218838;
+            --background-color: #f8f9fa;
+            --text-color: #333;
+            --border-color: #ddd;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        p {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-group select, .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group select:focus, .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .pricing-table-container {
+            margin-top: 30px;
+        }
+
+        .pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .pricing-table th, .pricing-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: center;
+        }
+
+        .pricing-table th {
+            background-color: var(--primary-color);
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .pricing-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .pricing-table tr:hover {
+            background-color: #e9ecef;
+        }
+
+        .confirmation-message {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .additional-logo-pricing {
+            margin-top: 20px;
+        }
+
+        .additional-logo-pricing h2 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .additional-logo-pricing table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .additional-logo-pricing th, .additional-logo-pricing td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: center;
+        }
+
+        .additional-logo-pricing th {
+            background-color: var(--primary-color);
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .additional-logo-pricing tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+
+            .pricing-table th, .pricing-table td,
+            .additional-logo-pricing th, .additional-logo-pricing td {
+                padding: 8px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Embroidery Price Calculator</h1>
+        <p>Use this calculator for non-Sanmar embroidered shirts. Input the cost of the blank shirt plus any inbound freight (if applicable) to calculate embroidery pricing. V3 August 21, 2024</p>
+        <div class="form-group">
+            <label for="product-type">Product Type:</label>
+            <select id="product-type">
+                <option value="Garment">Garment</option>
+                <option value="Cap">Cap</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="base-price">Base Price of Blank ($):</label>
+            <input type="number" id="base-price" step="0.01" placeholder="Enter base price">
+        </div>
+        <button onclick="calculatePrices()">Calculate</button>
+        <div class="pricing-table-container">
+            <h2>Pricing Table</h2>
+            <table class="pricing-table" id="pricing-table">
+                <thead>
+                    <tr>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody id="pricing-table-body">
+                </tbody>
+            </table>
+        </div>
+        <div id="confirmation-message" class="confirmation-message"></div>
+        <button id="modalBtn">View Additional Logo Pricing</button>
+    </div>
+
+    <!-- Modal for additional logo pricing -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="cap-logo-pricing" class="additional-logo-pricing" style="display: none;">
+                <h2>Cap Logo Pricing</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>2-23</th>
+                            <th>24-143</th>
+                            <th>144+</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Embroidered Logo on Back of Cap</td>
+                            <td>8.00</td>
+                            <td>7.00</td>
+                            <td>6.00</td>
+                        </tr>
+                        <tr>
+                            <td>Text Only</td>
+                            <td>6.00</td>
+                            <td>5.00</td>
+                            <td>4.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="garment-logo-pricing" class="additional-logo-pricing" style="display: none;">
+                <h2>Garment Logo Pricing</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>2-5</th>
+                            <th>6-11</th>
+                            <th>12-23</th>
+                            <th>24-47</th>
+                            <th>48-71</th>
+                            <th>72+</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Left Chest (8,000 Stitches)</td>
+                            <td>13.25</td>
+                            <td>11.00</td>
+                            <td>10.00</td>
+                            <td>9.25</td>
+                            <td>8.25</td>
+                            <td>7.75</td>
+                        </tr>
+                        <tr>
+                            <td>Medium (15,000 Stitches)</td>
+                            <td>24.75</td>
+                            <td>20.75</td>
+                            <td>18.75</td>
+                            <td>17.25</td>
+                            <td>15.50</td>
+                            <td>14.50</td>
+                        </tr>
+                        <tr>
+                            <td>Big (20,000 Stitches)</td>
+                            <td>33.00</td>
+                            <td>27.50</td>
+                            <td>24.75</td>
+                            <td>22.75</td>
+                            <td>20.75</td>
+                            <td>19.25</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculatePrices() {
+            const productType = document.getElementById('product-type').value;
+            const basePrice = parseFloat(document.getElementById('base-price').value);
+
+            if (isNaN(basePrice) || basePrice <= 0) {
+                alert('Please enter a valid base price.');
+                return;
+            }
+
+            const pricingTableBody = document.getElementById('pricing-table-body');
+            pricingTableBody.innerHTML = '';
+
+            let prices;
+            if (productType === 'Cap') {
+                prices = calculateCapPrices(basePrice);
+            } else {
+                prices = calculateGarmentPrices(basePrice);
+            }
+
+            prices.forEach(price => {
+                const row = `<tr>
+                    <td>${price.quantity}</td>
+                    <td>$${price.price.toFixed(2)}</td>
+                </tr>`;
+                pricingTableBody.innerHTML += row;
+            });
+
+            document.getElementById('confirmation-message').innerText = `Pricing for a ${productType} with a cost of $${basePrice.toFixed(2)} has been calculated.`;
+        }
+
+        function calculateCapPrices(basePrice) {
+            return [
+                {quantity: "2-23", price: Math.ceil(basePrice * 3.5 + 9.0)},
+                {quantity: "24-143", price: Math.ceil(basePrice * 2.5 + 6.25)},
+                {quantity: "144+", price: Math.ceil(basePrice * 2.5 + 3.5)}
+            ];
+        }
+
+        function calculateGarmentPrices(basePrice) {
+            const quantities = [
+                {range: "2-5", qty: 2},
+                {range: "6-11", qty: 6},
+                {range: "12-23", qty: 12},
+                {range: "24-47", qty: 24},
+                {range: "48-71", qty: 48},
+                {range: "72+", qty: 72}
+            ];
+
+            return quantities.map(q => {
+                return {
+                    quantity: q.range,
+                    price: calculateGarmentPrice(basePrice, q.qty)
+                };
+            });
+        }
+
+        function calculateGarmentPrice(basePrice, quantity) {
+            let markup, baseCost;
+
+            if (quantity >= 72) {
+                if (basePrice <= 5) markup = 2.06;
+                else if (basePrice <= 10) markup = 1.72;
+                else if (basePrice <= 20) markup = 1.72;
+                else if (basePrice <= 30) markup = 1.72;
+                else if (basePrice <= 40) markup = 1.66;
+                else markup = 1.59;
+                baseCost = 7.93;
+            } else if (quantity >= 48) {
+                if (basePrice <= 5) markup = 2.24;
+                else if (basePrice <= 10) markup = 1.88;
+                else if (basePrice <= 20) markup = 1.72;
+                else if (basePrice <= 30) markup = 1.72;
+                else if (basePrice <= 40) markup = 1.72;
+                else if (basePrice <= 50) markup = 1.69;
+                else markup = 1.61;
+                baseCost = 8.50;
+            } else if (quantity >= 24) {
+                if (basePrice <= 5) markup = 2.29;
+                else if (basePrice <= 10) markup = 1.98;
+                else if (basePrice <= 20) markup = 1.72;
+                else if (basePrice <= 30) markup = 1.72;
+                else if (basePrice <= 40) markup = 1.74;
+                else if (basePrice <= 50) markup = 1.72;
+                else markup = 1.66;
+                baseCost = 9.35;
+            } else if (quantity >= 12) {
+                if (basePrice <= 5) markup = 2.34;
+                else if (basePrice <= 10) markup = 2.06;
+                else if (basePrice <= 20) markup = 1.77;
+                else if (basePrice <= 30) markup = 1.77;
+                else if (basePrice <= 40) markup = 1.77;
+                else if (basePrice <= 50) markup = 1.74;
+                else markup = 1.72;
+                baseCost = 10.20;
+            } else if (quantity >= 6) {
+                if (basePrice <= 5) markup = 2.96;
+                else if (basePrice <= 5) markup = 2.96;
+                else if (basePrice <= 10) markup = 2.58;
+                else if (basePrice <= 20) markup = 2.06;
+                else if (basePrice <= 30) markup = 1.80;
+                else if (basePrice <= 40) markup = 1.80;
+                else if (basePrice <= 50) markup = 1.77;
+                else markup = 1.77;
+                baseCost = 11.33;
+            } else {
+                if (basePrice <= 5) markup = 4.28;
+                else if (basePrice <= 10) markup = 3.07;
+                else if (basePrice <= 20) markup = 2.67;
+                else if (basePrice <= 30) markup = 2.67;
+                else if (basePrice <= 50) markup = 2.37;
+                else markup = 2.24;
+                baseCost = 14.11;
+            }
+
+            return Math.ceil(basePrice * markup + baseCost);
+        }
+
+        // Modal functionality
+        const modal = document.getElementById("myModal");
+        const btn = document.getElementById("modalBtn");
+        const span = document.getElementsByClassName("close")[0];
+
+        btn.onclick = function() {
+            modal.style.display = "block";
+            const productType = document.getElementById('product-type').value;
+            if (productType === 'Cap') {
+                document.getElementById('cap-logo-pricing').style.display = 'block';
+                document.getElementById('garment-logo-pricing').style.display = 'none';
+            } else {
+                document.getElementById('cap-logo-pricing').style.display = 'none';
+                document.getElementById('garment-logo-pricing').style.display = 'block';
+            }
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Keyboard accessibility for modal
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && modal.style.display === 'block') {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Add event listeners for form inputs
+        document.getElementById('product-type').addEventListener('change', function() {
+            document.getElementById('confirmation-message').innerText = '';
+        });
+
+        document.getElementById('base-price').addEventListener('input', function() {
+            document.getElementById('confirmation-message').innerText = '';
+        });
+    </script>
+</body>
+</html>

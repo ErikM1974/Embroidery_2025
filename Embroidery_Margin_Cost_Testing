@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Embroidery Margin & Costs Testing</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background:#f0f0f0; margin:0; padding:20px; color:#333;
+  }
+  #app {
+    max-width:900px; margin:0 auto; background:#fff; padding:20px; border-radius:8px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+    box-sizing:border-box;
+  }
+  h1 {
+    text-align:center; color:#44b151; font-size:24px; margin-bottom:15px; font-weight:bold;
+  }
+  .instructions {
+    text-align:center; color:#333; margin-bottom:20px; font-size:14px; line-height:1.6;
+  }
+
+  .top-inputs {
+    display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end;justify-content:center;margin-bottom:20px;
+  }
+  .top-block {
+    flex:1;min-width:200px;
+  }
+  label {
+    display:block;margin-bottom:5px;font-weight:bold;color:#44b151;
+  }
+  input[type="number"] {
+    width:100%;padding:8px;margin-bottom:10px;border:1px solid #44b151;border-radius:4px;font-size:14px;box-sizing:border-box;
+  }
+  .fee-block {
+    display:flex;align-items:center;gap:10px;
+  }
+  .switch {
+    position: relative;display:inline-block;width:60px;height:30px;
+  }
+  .switch input {opacity:0;width:0;height:0;}
+  .slider {
+    position:absolute;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:30px;transition:.4s;cursor:pointer;
+  }
+  .slider:before {
+    position:absolute;content:"";height:22px;width:22px;left:4px;bottom:4px;background:#fff;border-radius:50%;transition:.4s;
+  }
+  input:checked + .slider {
+    background-color:#44b151;
+  }
+  input:checked + .slider:before {
+    transform:translateX(28px);
+  }
+
+  .section {
+    margin-bottom:20px;
+  }
+  .section h2 {
+    text-align:center; font-size:18px; margin-bottom:10px; color:#333;
+  }
+
+  .tier-config-table {
+    width:100%;border-collapse:collapse;margin-top:20px;font-size:14px;table-layout:auto;
+  }
+  .tier-config-table th, .tier-config-table td {
+    border:1px solid #ccc; padding:8px; text-align:center; vertical-align:middle;
+  }
+  .tier-config-table th {
+    background:#e6f3ef;color:#333;font-weight:bold;
+  }
+  .margin-input, .cost-input {
+    width:60px;text-align:right;
+  }
+  .margin-input {
+    width:50px;
+  }
+  .mult-display-cell {
+    font-size:12px;color:#333;font-style:italic;
+  }
+
+  .compute-button {
+    display:block;margin:20px auto;padding:10px 20px;background:#44b151;color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:16px;text-align:center;
+  }
+  .compute-button:hover {
+    background:#3a9a45;
+  }
+
+  .results-container {
+    margin-top:30px;background:#fafafa;border:1px solid #ddd;border-radius:5px;padding:20px;display:none;animation:fadein 0.5s ease;
+  }
+  .results-container h2 {
+    text-align:center;margin-bottom:15px;color:#333;font-size:18px;
+  }
+  .results-table {
+    width:100%;border-collapse:collapse;font-size:14px;margin-top:10px;table-layout:fixed;
+  }
+  .results-table th, .results-table td {
+    border:1px solid #44b151;padding:8px;text-align:center;vertical-align:middle;word-wrap:break-word;box-sizing:border-box;
+  }
+  .results-table th {
+    background:#44b151;color:#fff;font-weight:bold;
+  }
+  .results-table tr:nth-child(even){background:#e6f3ef;}
+
+  .small-input {
+    width:30px;text-align:center;padding:2px;font-size:13px;box-sizing:border-box;
+  }
+
+  .less-min-note, .stitch-note {
+    font-style:italic;color:#444;margin-top:10px;font-size:13px;text-align:center;display:none;
+  }
+
+  .change-note, .confirmation-message {
+    text-align:center;
+    font-size:14px;
+    margin-bottom:20px;
+    display:none;
+  }
+  .change-note {
+    color:#cc0000;font-style:italic;
+  }
+  .confirmation-message {
+    background:#d4edda;color:#155724;border:1px solid #c3e6cb;border-radius:5px;padding:10px;
+    animation:fadein 0.5s ease;
+  }
+
+  .matrix-toggle {
+    text-align:center;
+    font-size:14px;
+    color:#007bff;
+    text-decoration:underline;
+    cursor:pointer;
+    margin-top:20px;
+  }
+  .matrix-toggle:hover {
+    color:#0056b3;text-decoration:none;
+  }
+
+  .print-matrix {
+    display:none;
+    margin-top:10px;
+    border:1px solid #ccc;
+    padding:10px;
+    border-radius:4px;
+    font-size:12px;
+    color:#555;
+    animation:fadein 0.5s ease;
+  }
+  .print-matrix table {
+    width:100%;border-collapse:collapse;margin-top:10px;
+  }
+  .print-matrix th, .print-matrix td {
+    border:1px solid #ccc;
+    padding:5px;
+    text-align:center;
+  }
+  .print-matrix th {
+    background:#eee;font-weight:bold;
+  }
+
+  @keyframes fadein {
+    from {opacity:0;}
+    to {opacity:1;}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <h1>Embroidery Margin & Costs Testing</h1>
+  <p class="instructions">
+    Enter garment cost, stitch count, handling fee, art fee, and configure margins & embroidery costs per tier.<br>
+    For small orders (1-23), use 24-47 tier pricing + handling fee ($50 default, adjustable) + optional art fee if ON.<br>
+    If stitches >12,000, add $0.75 per thousand (rounded up).<br>
+    After margin is applied, blank cost rounds up to nearest $0.25. No final rounding on total.
+  </p>
+
+  <div class="top-inputs">
+    <div class="top-block">
+      <label>Garment Cost ($)</label>
+      <input type="number" id="garmentCost" step="0.01" placeholder="e.g. 3.20">
+    </div>
+    <div class="top-block">
+      <label>Stitch Count</label>
+      <input type="number" id="stitchCount" step="1" value="12000">
+    </div>
+    <div class="top-block">
+      <label>Handling Fee ($)</label>
+      <input type="number" id="handlingFee" step="0.01" value="50.00">
+    </div>
+    <div class="top-block">
+      <label>Art (Digitizing) Fee ($)</label>
+      <div class="fee-block">
+        <input type="number" id="artFee" step="0.01" value="100.00">
+        <label class="switch">
+          <input type="checkbox" id="artToggle">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Tiers: Margin % & Embroidery Cost</h2>
+    <table class="tier-config-table" id="tier-config-table">
+      <thead>
+        <tr>
+          <th>Tier</th>
+          <th>Margin %</th>
+          <th>Multiplier</th>
+          <th>Embroidery Cost<br>(up to 12,000 stitches)</th>
+        </tr>
+      </thead>
+      <tbody id="tier-config-body"></tbody>
+    </table>
+    <button id="calculateBtn" class="compute-button" style="margin-top:20px;">Calculate</button>
+  </div>
+
+  <div class="change-note" id="changeNote">Values changed! Press "Calculate" to update.</div>
+  <div class="confirmation-message" id="confirmationMessage">Prices Updated.</div>
+
+  <div class="results-container" id="results-section">
+    <h2>Pricing by Quantity Tier</h2>
+    <table class="results-table" id="results-table">
+      <thead>
+        <tr>
+          <th>Quantity Tier</th>
+          <th>Exact Qty</th>
+          <th>Blank Cost</th>
+          <th>Embroidery Cost</th>
+          <th>Fees</th>
+          <th>Total/Per Item</th>
+        </tr>
+      </thead>
+      <tbody id="results-body"></tbody>
+    </table>
+    <div class="less-min-note" id="lessMinInfo">For 1-23 shirts: Using 24-47 tier pricing plus Handling and optional Art Fee/qty</div>
+    <div class="note" style="margin-top:10px;">
+      Margin is per tier. Blank cost after margin rounds to nearest $0.25.<br>
+      No final rounding on total. Stitches over 12,000 add $0.75 per 1000 stitches.
+    </div>
+    <div class="matrix-toggle" id="matrixToggle">Show Print Pricing Matrix (Reference)</div>
+    <div class="print-matrix" id="printMatrix">
+      <strong>Reference Embroidery Pricing</strong>
+      <table>
+        <thead>
+          <tr>
+            <th>Tier</th>
+            <th>Embroidery Cost<br>(up to 12,000 stitches)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>24-47</td><td>$9.25</td></tr>
+          <tr><td>48-71</td><td>$8.25</td></tr>
+          <tr><td>72+</td><td>$7.75</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:11px;color:#888;">This is a reference starting point. Adjust as needed.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const tiers=["1-23","24-47","48-71","72+"];
+const configTiers=["24-47","48-71","72+"];
+const tierConfigBody=document.getElementById('tier-config-body');
+const garmentCostInput=document.getElementById('garmentCost');
+const stitchCountInput=document.getElementById('stitchCount');
+const handlingFeeInput=document.getElementById('handlingFee');
+const artFeeInput=document.getElementById('artFee');
+const artToggle=document.getElementById('artToggle');
+
+const calculateBtn=document.getElementById('calculateBtn');
+const changeNote=document.getElementById('changeNote');
+const confirmationMessage=document.getElementById('confirmationMessage');
+const resultsSection=document.getElementById('results-section');
+const resultsBody=document.getElementById('results-body');
+const lessMinInfo=document.getElementById('lessMinInfo');
+const matrixToggle=document.getElementById('matrixToggle');
+const printMatrix=document.getElementById('printMatrix');
+
+let userHasCalculated=false;
+
+let defaultMargin=40;
+let defaultEmbCosts={
+  "24-47":9.25,
+  "48-71":8.25,
+  "72+":7.75
+};
+
+// Build config rows
+configTiers.forEach(tier=>{
+  const row=document.createElement('tr');
+  let tdTier=document.createElement('td');
+  tdTier.textContent=tier;
+  row.appendChild(tdTier);
+
+  // Margin %
+  const tdMargin=document.createElement('td');
+  const marginInput=document.createElement('input');
+  marginInput.type='number';
+  marginInput.className='margin-input';
+  marginInput.step='1';
+  marginInput.value=defaultMargin;
+  marginInput.style.width='50px';
+  marginInput.setAttribute('data-tier',tier);
+  marginInput.addEventListener('input',updateMultiplierDisplay);
+  tdMargin.appendChild(marginInput);
+  row.appendChild(tdMargin);
+
+  // Multiplier display
+  const tdMult=document.createElement('td');
+  tdMult.className='mult-display-cell';
+  tdMult.textContent='...';
+  row.appendChild(tdMult);
+
+  // Emb cost
+  const tdCost=document.createElement('td');
+  const costInput=document.createElement('input');
+  costInput.type='number';
+  costInput.step='0.01';
+  costInput.value=defaultEmbCosts[tier];
+  costInput.className='cost-input';
+  costInput.style.width='60px';
+  costInput.setAttribute('data-tier',tier);
+  tdCost.appendChild(costInput);
+  row.appendChild(tdCost);
+
+  tierConfigBody.appendChild(row);
+});
+
+// Initialize multiplier display
+document.querySelectorAll('.margin-input').forEach(mi=>updateMultiplierDisplay({target:mi}));
+
+function updateMultiplierDisplay(e){
+  const input=e.target;
+  const val=parseFloat(input.value);
+  const row=input.closest('tr');
+  const tdMult=row.querySelector('.mult-display-cell');
+  if(isNaN(val)||val<=0||val>=100){
+    tdMult.textContent='Invalid margin';
+  } else {
+    let margin=val/100;
+    let multiplier=1/(1-margin);
+    tdMult.textContent=`x${multiplier.toFixed(4)}`;
+  }
+}
+
+function markChanged(){
+  if(userHasCalculated){
+    changeNote.style.display='block';
+  }
+  confirmationMessage.style.display='none';
+  resultsSection.style.display='none';
+}
+
+[garmentCostInput,stitchCountInput,handlingFeeInput,artFeeInput,artToggle].forEach(el=>el.addEventListener('input',markChanged));
+calculateBtn.addEventListener('click',computePricing);
+matrixToggle.addEventListener('click',()=>{
+  printMatrix.style.display=(printMatrix.style.display==='none'||printMatrix.style.display==='')?'block':'none';
+});
+
+function computePricing(){
+  changeNote.style.display='none';
+  confirmationMessage.style.display='none';
+
+  const garmentCost=parseFloat(garmentCostInput.value)||0;
+  const stitchCount=parseInt(stitchCountInput.value)||12000;
+  const handlingFee=parseFloat(handlingFeeInput.value)||50.00;
+  const artFee=parseFloat(artFeeInput.value)||100.00;
+  const artOn=artToggle.checked;
+
+  if(garmentCost<=0){
+    alert('Enter a valid garment cost.');
+    return;
+  }
+
+  // Get margins & emb costs
+  let margins={};
+  let embCosts={};
+  configTiers.forEach(tier=>{
+    const row=Array.from(tierConfigBody.querySelectorAll('tr')).find(r=>r.querySelector('td').textContent===tier);
+    const marginInput=row.querySelector('.margin-input');
+    const val=parseFloat(marginInput.value);
+    let marginPercent=(isNaN(val)||val<=0||val>=100)?40:val;
+    margins[tier]=marginPercent;
+
+    const costInput=row.querySelector('.cost-input');
+    let c=parseFloat(costInput.value)||0;
+    embCosts[tier]=c;
+  });
+
+  resultsBody.innerHTML='';
+  resultsSection.style.display='block';
+
+  tiers.forEach(tier=>{
+    const row=document.createElement('tr');
+
+    let tdTier=document.createElement('td');
+    tdTier.textContent=tier;
+    row.appendChild(tdTier);
+
+    let exactQtyCell=document.createElement('td');
+    let needsQtyInput=(tier==="1-23");
+    let eqInput;
+    if(needsQtyInput){
+      eqInput=document.createElement('input');
+      eqInput.type='number';
+      eqInput.className='small-input';
+      eqInput.min=1;eqInput.max=23;
+      eqInput.addEventListener('input',()=>{
+        showTierPricing(tier,eqInput.value,garmentCost,stitchCount,handlingFee,artFee,artOn,margins,embCosts,row);
+      });
+      exactQtyCell.appendChild(eqInput);
+    } else {
+      exactQtyCell.textContent='N/A';
+    }
+    row.appendChild(exactQtyCell);
+
+    let blankCell=document.createElement('td');
+    let embCell=document.createElement('td');
+    let feeCell=document.createElement('td');
+    let totalCell=document.createElement('td');
+
+    row.appendChild(blankCell);
+    row.appendChild(embCell);
+    row.appendChild(feeCell);
+    row.appendChild(totalCell);
+
+    row._blankCell=blankCell;
+    row._embCell=embCell;
+    row._feeCell=feeCell;
+    row._totalCell=totalCell;
+
+    resultsBody.appendChild(row);
+
+    if(!needsQtyInput){
+      showTierPricing(tier,null,garmentCost,stitchCount,handlingFee,artFee,artOn,margins,embCosts,row);
+    }
+  });
+
+  document.getElementById('lessMinInfo').style.display='block';
+  userHasCalculated=true;
+  confirmationMessage.style.display='block';
+}
+
+function showTierPricing(tier,exactQty,garmentCost,stitchCount,handlingFee,artFee,artOn,margins,embCosts,row){
+  if(!row){
+    row=Array.from(resultsBody.querySelectorAll('tr')).find(r=>r.querySelector('td').textContent===tier);
+  }
+  const blankCell=row._blankCell;
+  const embCell=row._embCell;
+  const feeCell=row._feeCell;
+  const totalCell=row._totalCell;
+
+  let effectiveTier=(tier==='1-23')?'24-47':tier;
+  let quantity=getQuantityFromTier(tier);
+
+  let q=quantity;
+  let feeBreakdown=[];
+  let feeTotal=0;
+
+  if(tier==='1-23'){
+    const eq=parseInt(exactQty);
+    if(isNaN(eq)||eq<1||eq>23){
+      blankCell.textContent='Enter Qty';
+      embCell.textContent='';
+      feeCell.textContent='';
+      totalCell.textContent='';
+      return;
+    }
+    q=eq; // user exact qty for small order
+    // Handling fee/qty
+    let perItemHandling=handlingFee/q;
+    feeBreakdown.push(`Handling: $${perItemHandling.toFixed(2)}`);
+    feeTotal+=perItemHandling;
+    // Art fee if on and qty<24
+    if(artOn && q<24){
+      let perItemArt=artFee/q;
+      feeBreakdown.push(`Art: $${perItemArt.toFixed(2)}`);
+      feeTotal+=perItemArt;
+    }
+  } else if(artOn && getMinQtyFromTier(tier)<24){
+    // If tier<24 means 12-23 tier also gets art fee
+    // Actually tiers are 1-23 or 24-47, etc. 
+    // For 24-47 and above, we have no art fee since it's 24+
+    // So no art fee needed for normal tiers since they start at 24+.
+  }
+
+  let marginPercent=margins[effectiveTier]||40;
+  let margin=marginPercent/100;
+  let multiplier=1/(1-margin);
+
+  // Apply margin to garment cost
+  let preRoundBlankCost=garmentCost*multiplier;
+  let blankCost=roundUpToQuarter(preRoundBlankCost);
+
+  // Base embroidery cost for effective tier
+  let baseEmbCost=embCosts[effectiveTier]||0;
+
+  // Extra stitch fee if stitches>12000
+  let extraStitches=0;
+  if(stitchCount>12000){
+    extraStitches=Math.ceil((stitchCount-12000)/1000)*0.75;
+  }
+
+  let total=blankCost+baseEmbCost+extraStitches+feeTotal;
+
+  blankCell.textContent=`$${blankCost.toFixed(2)}`;
+  if(extraStitches>0){
+    embCell.innerHTML=`Base: $${baseEmbCost.toFixed(2)}<br>Extra: $${extraStitches.toFixed(2)}`;
+  } else {
+    embCell.textContent=`$${baseEmbCost.toFixed(2)}`;
+  }
+
+  if(feeBreakdown.length>1){
+    feeCell.innerHTML=feeBreakdown.join('<br>');
+  } else if(feeBreakdown.length===1){
+    feeCell.textContent=feeBreakdown[0];
+  } else {
+    feeCell.textContent='$0.00';
+  }
+
+  totalCell.textContent=`$${total.toFixed(2)}`;
+}
+
+function getQuantityFromTier(tier){
+  if(tier==='1-23')return 1;
+  if(tier==='24-47')return 24;
+  if(tier==='48-71')return 48;
+  return 72;
+}
+
+function getMinQtyFromTier(tier){
+  // For reference if needed
+  if(tier==='1-23')return 1;
+  if(tier==='24-47')return 24;
+  if(tier==='48-71')return 48;
+  return 72;
+}
+
+function roundUpToQuarter(amount){
+  let cents=Math.round(amount*100);
+  let remainder=cents%25;
+  if(remainder>0){
+    cents += (25 - remainder);
+  }
+  return cents/100.0;
+}
+</script>
+</body>
+</html>

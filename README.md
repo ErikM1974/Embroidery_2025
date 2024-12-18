@@ -1,32 +1,42 @@
-# Embroidery Margin & Costs Calculator (2025)
+# Embroidery Manual Pricing (Garment/Cap) - 2025
 
-This application is designed to help you calculate embroidery pricing for garments and caps based on various parameters such as item cost, stitch count, handling fee, digitizing fee, and margins. It supports multiple tiers, additional logos, and applies specific rules for small orders and stitch counts.
+This internal application for NW Custom Apparel helps you calculate embroidery pricing for garments and caps using fixed margins and predefined embroidery costs. The tool supports handling fees, digitizing fees, small-order logic, and stitch count extras, while allowing you to easily switch between Garment and Cap pricing modes.
 
-## What Does the App Do?
+## Key Features
 
-- **Toggle Product Type:** Switch between **Garment** and **Cap** pricing modes.
-- **User Inputs:** Enter base item cost, stitch count, handling fee, and digitizing fee.
-- **Margins & Costs per Tier:** Define margin percentages and embroidery costs for different quantity tiers.
-- **Additional Logos:** Add sleeve, back-of-neck, opposite chest (garment), or back/side (flag) and back text (cap) logos, each with their own cost structure.
-- **Small Orders (<24):** For quantities 1-23, use the next available tier pricing plus handling and digitizing (if toggled on).
-- **Stitch Count >8,000:** Adds $0.75 per thousand stitches (rounded up) beyond 8,000.
-- **Rounding:** Blank cost rounds up to the nearest $0.25; no final rounding on the total price.
+- **Product Type Toggle:** Seamlessly switch between **Garment** and **Cap** modes. A clear status line shows which type is currently selected.
+- **Simple User Inputs:** Provide:
+  - Item Cost
+  - Stitch Count
+  - Handling Fee
+  - Digitizing Fee  
+  No margin or embroidery cost configuration is needed—those values are fixed and hidden from the user.
+  
+- **Optional Additional Logos:** Additional logos (sleeve, back-of-neck, opposite chest for garments; back/side flag and back text for caps) are tucked behind an "Additional Logos (Optional)" toggle. Click it only if you need to add logos, keeping the interface uncluttered for most cases.
+
+- **Small Orders (<24 Units):** For orders of 1-23 items, the pricing uses the next available tier plus handling and digitizing (if toggled). After calculating, simply enter the exact quantity to see immediate updates.
+
+- **Stitch Count >8,000:** If the stitch count exceeds 8,000, add $0.75 per additional 1,000 stitches (rounded up).
+
+- **Rounding:** Blank cost after margin rounds up to the nearest $0.25. There is no further rounding on the final total.
+
+- **Reference Pricing Matrix:** A "Show Pricing Matrix (Reference)" link displays a hard-coded pricing matrix for both garments and caps, updating dynamically based on the selected product type.
 
 ## Embroidery Pricing & Quantity Breaks
 
-### Garment Pricing (Main Logo)
+### Garment Main Logo
 | Quantity Tier | Embroidery Cost (up to 8,000 stitches) |
 |---------------|-----------------------------------------|
 | 24-47         | $12.00                                  |
 | 48-71         | $11.00                                  |
 | 72+           | $10.00                                  |
 
-For 1-23 garments, use 24-47 tier pricing plus handling and digitizing fees (if toggled).
+For 1-23 garments, use 24-47 tier pricing plus handling and digitizing if toggled.
 
 **Garment Additional Logos:**  
-Sleeve, back-of-neck, and opposite chest logos use the same tier-based cost as the main logo.
+Sleeve, back-of-neck, and opposite chest logos follow the same tier-based cost as the main logo.
 
-### Cap Pricing (Main Logo)
+### Cap Main Logo
 | Quantity Tier | Embroidery Cost (up to 8,000 stitches) |
 |---------------|-----------------------------------------|
 | 24-71         | $10.00                                  |
@@ -34,7 +44,7 @@ Sleeve, back-of-neck, and opposite chest logos use the same tier-based cost as t
 | 144-288       | $8.00                                   |
 | 288+          | $7.50                                   |
 
-For 1-23 caps, use the 24-71 tier pricing plus handling and digitizing fees (if toggled).
+For 1-23 caps, use 24-71 tier pricing plus handling and digitizing if toggled.
 
 **Cap Additional Logos:**
 
@@ -54,26 +64,19 @@ For 1-23 caps, use the 24-71 tier pricing plus handling and digitizing fees (if 
   | 144-288       | $5.00 |
   | 288+          | $4.00 |
 
-### Small Orders (1-23)
-
-For both garments and caps, orders under 24 units use the next tier’s pricing plus handling and digitizing fees if toggled. The exact quantity must be entered after pressing "Calculate."
-
-### Stitches Over 8,000
-
-For stitch counts above 8,000, add $0.75 per additional 1,000 stitches (rounded up).
-
 ## How to Use
 
-1. **Select Product Type:** Use the toggle to choose Garment or Cap.
-2. **Enter Inputs:** Provide item cost, stitch count, handling fee, and digitizing fee.
-3. **Configure Margins & Costs:** Set margin percentages and embroidery costs for each tier.
-4. **Add Additional Logos:** Enable logos, set their stitch counts, and toggle digitizing if needed.
-5. **Calculate:** Press "Calculate" to see results.  
-   For the 1-23 tier, enter exact quantity after calculation to apply less-min pricing.
-   
+1. **Select Product Type:** Toggle between Garment or Cap. A status line shows "Currently Selected: Garment" or "Currently Selected: Cap" for clarity.
+2. **Enter Inputs:** Provide the item cost, stitch count, handling fee, and digitizing fee.
+3. **Add Additional Logos if Needed:** Click "Additional Logos (Optional)" to reveal the logos section and configure logos as desired.
+4. **Calculate:** Press "Calculate" to compute pricing. For 1-23 units, enter the exact quantity post-calculation for immediate less-min updates.
+5. **View Reference Pricing:** Click "Show Pricing Matrix (Reference)" to see preset pricing tables for garments or caps.
+
 ## Notes
 
-- Blank cost is calculated after applying the margin, then rounded up to the nearest $0.25.
-- No final rounding on the total cost.
-- Stitches over 8,000 add $0.75/1000 stitches.
-- This tool helps dial in pricing to ensure your margins and final prices align with your business goals.
+- Margin is fixed at 40% behind the scenes—no user adjustment needed.
+- Blank cost rounds up to the nearest $0.25 after margin.
+- Stitches over 8,000 add $0.75 per 1,000 stitches (rounded up).
+- No final rounding on the total.
+- For orders <24, use next tier pricing plus handling/digitizing if toggled.
+- This streamlined UI ensures a cleaner, faster experience for sales staff, focusing on essential pricing results.

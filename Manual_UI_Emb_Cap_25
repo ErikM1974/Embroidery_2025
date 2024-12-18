@@ -162,11 +162,26 @@
   .additional-logos h3 {
     margin-top:0;font-size:16px;color:#333;margin-bottom:10px;font-weight:bold;
   }
+
+  /* Updated layout for logo-option */
   .logo-option {
-    display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:5px;
+    margin-bottom:15px;
   }
+
   .logo-option h4 {
     margin:0;font-size:14px;color:#44b151;font-weight:bold;
+  }
+
+  .logo-controls {
+    display:flex;align-items:center;gap:15px;flex-wrap:wrap;
+  }
+  .logo-controls label {
+    font-weight:normal;color:#333;margin:0;
+    display:flex;align-items:center;gap:5px;
   }
 
   .compute-button {
@@ -362,55 +377,64 @@
     <div id="garmentLogos" style="display:none;">
       <div class="logo-option">
         <h4>Sleeve Logo</h4>
-        <div>
-          <label>On/Off</label>
-          <label class="switch">
-            <input type="checkbox" id="sleeveLogoToggle">
-            <span class="slider"></span>
+        <div class="logo-controls">
+          <label>On/Off
+            <label class="switch">
+              <input type="checkbox" id="sleeveLogoToggle">
+              <span class="slider"></span>
+            </label>
           </label>
-          <label>Digitizing</label>
-          <label class="switch">
-            <input type="checkbox" id="sleeveDigitizingToggle">
-            <span class="slider"></span>
+          <label>Digitizing
+            <label class="switch">
+              <input type="checkbox" id="sleeveDigitizingToggle">
+              <span class="slider"></span>
+            </label>
           </label>
-          <label>Stitches</label>
-          <input type="number" id="sleeveStitches" step="1" value="8000" style="width:80px;">
+          <label>Stitches
+            <input type="number" id="sleeveStitches" step="1" value="8000" style="width:60px;">
+          </label>
         </div>
       </div>
 
       <div class="logo-option">
         <h4>Back-of-Neck Logo</h4>
-        <div>
-          <label>On/Off</label>
-          <label class="switch">
-            <input type="checkbox" id="neckLogoToggle">
-            <span class="slider"></span>
+        <div class="logo-controls">
+          <label>On/Off
+            <label class="switch">
+              <input type="checkbox" id="neckLogoToggle">
+              <span class="slider"></span>
+            </label>
           </label>
-          <label>Digitizing</label>
-          <label class="switch">
-            <input type="checkbox" id="neckDigitizingToggle">
-            <span class="slider"></span>
+          <label>Digitizing
+            <label class="switch">
+              <input type="checkbox" id="neckDigitizingToggle">
+              <span class="slider"></span>
+            </label>
           </label>
-          <label>Stitches</label>
-          <input type="number" id="neckStitches" step="1" value="8000" style="width:80px;">
+          <label>Stitches
+            <input type="number" id="neckStitches" step="1" value="8000" style="width:60px;">
+          </label>
         </div>
       </div>
 
       <div class="logo-option">
         <h4>Opposite Chest Logo</h4>
-        <div>
-          <label>On/Off</label>
-          <label class="switch">
-            <input type="checkbox" id="oppChestLogoToggle">
-            <span class="slider"></span>
+        <div class="logo-controls">
+          <label>On/Off
+            <label class="switch">
+              <input type="checkbox" id="oppChestLogoToggle">
+              <span class="slider"></span>
+            </label>
           </label>
-          <label>Digitizing</label>
-          <label class="switch">
-            <input type="checkbox" id="oppChestDigitizingToggle">
-            <span class="slider"></span>
+          <label>Digitizing
+            <label class="switch">
+              <input type="checkbox" id="oppChestDigitizingToggle">
+              <span class="slider"></span>
+            </label>
           </label>
-          <label>Stitches</label>
-          <input type="number" id="oppChestStitches" step="1" value="8000" style="width:80px;">
+          <label>Stitches
+            <input type="number" id="oppChestStitches" step="1" value="8000" style="width:60px;">
+          </label>
         </div>
       </div>
     </div>
@@ -418,37 +442,43 @@
     <div id="capLogos" style="display:none;">
       <div class="logo-option">
         <h4>Cap Back/Side (Flag)</h4>
-        <div>
-          <label>On/Off</label>
-          <label class="switch">
-            <input type="checkbox" id="capFlagLogoToggle">
-            <span class="slider"></span>
+        <div class="logo-controls">
+          <label>On/Off
+            <label class="switch">
+              <input type="checkbox" id="capFlagLogoToggle">
+              <span class="slider"></span>
+            </label>
           </label>
-          <label>Digitizing</label>
-          <label class="switch">
-            <input type="checkbox" id="capFlagDigitizingToggle">
-            <span class="slider"></span>
+          <label>Digitizing
+            <label class="switch">
+              <input type="checkbox" id="capFlagDigitizingToggle">
+              <span class="slider"></span>
+            </label>
           </label>
-          <label>Stitches</label>
-          <input type="number" id="capFlagStitches" step="1" value="8000" style="width:80px;">
+          <label>Stitches
+            <input type="number" id="capFlagStitches" step="1" value="8000" style="width:60px;">
+          </label>
         </div>
       </div>
 
       <div class="logo-option">
         <h4>Cap Back Text Only</h4>
-        <div>
-          <label>On/Off</label>
-          <label class="switch">
-            <input type="checkbox" id="capTextLogoToggle">
-            <span class="slider"></span>
+        <div class="logo-controls">
+          <label>On/Off
+            <label class="switch">
+              <input type="checkbox" id="capTextLogoToggle">
+              <span class="slider"></span>
+            </label>
           </label>
-          <label>Digitizing</label>
-          <label class="switch">
-            <input type="checkbox" id="capTextDigitizingToggle">
-            <span class="slider"></span>
+          <label>Digitizing
+            <label class="switch">
+              <input type="checkbox" id="capTextDigitizingToggle">
+              <span class="slider"></span>
+            </label>
           </label>
-          <label>Stitches</label>
-          <input type="number" id="capTextStitches" step="1" value="8000" style="width:80px;">
+          <label>Stitches
+            <input type="number" id="capTextStitches" step="1" value="8000" style="width:60px;">
+          </label>
         </div>
       </div>
     </div>
@@ -490,7 +520,6 @@ const marginPercent = 40;
 const garmentEmbCosts = { "24-47":12.00, "48-71":11.00, "72+":10.00 };
 const capEmbCosts = { "24-71":10.00, "72-143":9.00, "144-288":8.00, "288+":7.50 };
 
-// Additional references
 const productTypeToggle=document.getElementById('productTypeToggle');
 const productSelectionStatus=document.getElementById('productSelectionStatus');
 const garmentCostInput=document.getElementById('garmentCost');
@@ -583,7 +612,6 @@ additionalLogosBtn.addEventListener('click',()=>{
   } else {
     additionalLogosSection.style.display='none';
   }
-  // update logos display based on product type
   updateLogosDisplay();
 });
 
@@ -680,7 +708,6 @@ function computePricing(){
   resultsSection.style.display='block';
 
   const isG=isGarment();
-  const marginPercent=40;
   const margin=marginPercent/100;
   const multiplier=1/(1-margin);
 
@@ -773,7 +800,6 @@ function showTierPricing(tier,exactQty,garmentCost,stitchCount,handlingFee,digit
   const preRoundBlankCost=garmentCost*multiplier;
   const blankCost=roundUpToQuarter(preRoundBlankCost);
 
-  // Main Emb Cost based on tier:
   let mainEmbCost;
   if(isG){
     if(effectiveTier==="24-47") mainEmbCost=garmentEmbCosts["24-47"];

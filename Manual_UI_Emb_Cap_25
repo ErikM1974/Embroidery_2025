@@ -56,13 +56,21 @@
 
   .product-toggle-section {
     text-align:center;
-    margin-bottom:20px;
+    margin-bottom:10px;
   }
   .product-toggle-section label {
     font-weight:bold;
     color:#44b151;
     font-size:14px;
     margin:0 10px;
+  }
+
+  .product-selection-status {
+    text-align:center;
+    font-size:13px;
+    color:#333;
+    margin-bottom:20px;
+    font-style:italic;
   }
 
   .switch {
@@ -131,12 +139,25 @@
     display:flex;align-items:center;gap:10px;
   }
 
+  .additional-logos-toggle {
+    text-align:center;
+    margin-bottom:20px;
+  }
+  .additional-logos-toggle button {
+    background:#eee;border:1px solid #ccc;border-radius:4px;padding:8px 12px;cursor:pointer;
+    font-size:14px;color:#333;font-weight:bold;
+  }
+  .additional-logos-toggle button:hover {
+    background:#ddd;
+  }
+
   .additional-logos {
     background:#f9f9f9;
     border:1px solid #ddd;
     border-radius:5px;
     padding:15px;
-    margin-top:20px;
+    margin-top:10px;
+    display:none;
   }
   .additional-logos h3 {
     margin-top:0;font-size:16px;color:#333;margin-bottom:10px;font-weight:bold;
@@ -293,7 +314,7 @@
     <img src="https://cdn.caspio.com/A0E15000/Safety%20Stripes/web%20northwest%20custom%20apparel%20logo.png?ver=1" alt="NW Custom Apparel Logo">
   </div>
   <p class="instructions">
-    Enter item cost, stitch count, handling fee, and digitizing fee. Toggle Garment/Cap. For orders <24, use next tier pricing + handling/digitizing if toggled. Stitches >8,000 add $0.75/1000. Blank cost after margin rounds to nearest $0.25, no final rounding on total.
+    Enter item cost, stitch count, handling fee, and digitizing fee. Toggle Garment/Cap. For orders &lt;24, use next tier pricing + handling/digitizing if toggled. Stitches &gt;8,000 add $0.75/1000. Blank cost after margin rounds to $0.25, no final rounding on total.<br>
     Click "Calculate" to view results. For the 1-23 tier, enter exact quantity after calculation for instant updates.
   </p>
 
@@ -305,6 +326,7 @@
     </label>
     <label>Cap</label>
   </div>
+  <div class="product-selection-status" id="productSelectionStatus"></div>
 
   <div class="top-inputs">
     <div class="top-block">
@@ -331,100 +353,103 @@
     </div>
   </div>
 
-  <!-- Additional Logos for Garment -->
-  <div class="additional-logos" id="additionalLogosSectionGarment">
-    <h3>Additional Logos (Garment, up to 8,000 stitches)</h3>
-    <div class="logo-option">
-      <h4>Sleeve Logo</h4>
-      <div style="display:flex;align-items:center;gap:10px;">
-        <label>On/Off</label>
-        <label class="switch">
-          <input type="checkbox" id="sleeveLogoToggle">
-          <span class="slider"></span>
-        </label>
-        <label>Digitizing</label>
-        <label class="switch">
-          <input type="checkbox" id="sleeveDigitizingToggle">
-          <span class="slider"></span>
-        </label>
-        <label>Stitches</label>
-        <input type="number" id="sleeveStitches" step="1" value="8000" style="width:80px;">
-      </div>
-    </div>
-
-    <div class="logo-option">
-      <h4>Back-of-Neck Logo</h4>
-      <div style="display:flex;align-items:center;gap:10px;">
-        <label>On/Off</label>
-        <label class="switch">
-          <input type="checkbox" id="neckLogoToggle">
-          <span class="slider"></span>
-        </label>
-        <label>Digitizing</label>
-        <label class="switch">
-          <input type="checkbox" id="neckDigitizingToggle">
-          <span class="slider"></span>
-        </label>
-        <label>Stitches</label>
-        <input type="number" id="neckStitches" step="1" value="8000" style="width:80px;">
-      </div>
-    </div>
-
-    <div class="logo-option">
-      <h4>Opposite Chest Logo</h4>
-      <div style="display:flex;align-items:center;gap:10px;">
-        <label>On/Off</label>
-        <label class="switch">
-          <input type="checkbox" id="oppChestLogoToggle">
-          <span class="slider"></span>
-        </label>
-        <label>Digitizing</label>
-        <label class="switch">
-          <input type="checkbox" id="oppChestDigitizingToggle">
-          <span class="slider"></span>
-        </label>
-        <label>Stitches</label>
-        <input type="number" id="oppChestStitches" step="1" value="8000" style="width:80px;">
-      </div>
-    </div>
+  <div class="additional-logos-toggle">
+    <button id="additionalLogosBtn">Additional Logos (Optional)</button>
   </div>
 
-  <!-- Additional Logos for Cap -->
-  <div class="additional-logos" id="additionalLogosSectionCap" style="display:none;">
-    <h3>Additional Logos (Cap, up to 8,000 stitches)</h3>
-    <div class="logo-option">
-      <h4>Cap Back/Side (Flag)</h4>
-      <div style="display:flex;align-items:center;gap:10px;">
-        <label>On/Off</label>
-        <label class="switch">
-          <input type="checkbox" id="capFlagLogoToggle">
-          <span class="slider"></span>
-        </label>
-        <label>Digitizing</label>
-        <label class="switch">
-          <input type="checkbox" id="capFlagDigitizingToggle">
-          <span class="slider"></span>
-        </label>
-        <label>Stitches</label>
-        <input type="number" id="capFlagStitches" step="1" value="8000" style="width:80px;">
+  <div class="additional-logos" id="additionalLogosSection">
+    <h3 id="additionalLogosHeader">Additional Logos</h3>
+    <div id="garmentLogos" style="display:none;">
+      <div class="logo-option">
+        <h4>Sleeve Logo</h4>
+        <div>
+          <label>On/Off</label>
+          <label class="switch">
+            <input type="checkbox" id="sleeveLogoToggle">
+            <span class="slider"></span>
+          </label>
+          <label>Digitizing</label>
+          <label class="switch">
+            <input type="checkbox" id="sleeveDigitizingToggle">
+            <span class="slider"></span>
+          </label>
+          <label>Stitches</label>
+          <input type="number" id="sleeveStitches" step="1" value="8000" style="width:80px;">
+        </div>
+      </div>
+
+      <div class="logo-option">
+        <h4>Back-of-Neck Logo</h4>
+        <div>
+          <label>On/Off</label>
+          <label class="switch">
+            <input type="checkbox" id="neckLogoToggle">
+            <span class="slider"></span>
+          </label>
+          <label>Digitizing</label>
+          <label class="switch">
+            <input type="checkbox" id="neckDigitizingToggle">
+            <span class="slider"></span>
+          </label>
+          <label>Stitches</label>
+          <input type="number" id="neckStitches" step="1" value="8000" style="width:80px;">
+        </div>
+      </div>
+
+      <div class="logo-option">
+        <h4>Opposite Chest Logo</h4>
+        <div>
+          <label>On/Off</label>
+          <label class="switch">
+            <input type="checkbox" id="oppChestLogoToggle">
+            <span class="slider"></span>
+          </label>
+          <label>Digitizing</label>
+          <label class="switch">
+            <input type="checkbox" id="oppChestDigitizingToggle">
+            <span class="slider"></span>
+          </label>
+          <label>Stitches</label>
+          <input type="number" id="oppChestStitches" step="1" value="8000" style="width:80px;">
+        </div>
       </div>
     </div>
 
-    <div class="logo-option">
-      <h4>Cap Back Text Only</h4>
-      <div style="display:flex;align-items:center;gap:10px;">
-        <label>On/Off</label>
-        <label class="switch">
-          <input type="checkbox" id="capTextLogoToggle">
-          <span class="slider"></span>
-        </label>
-        <label>Digitizing</label>
-        <label class="switch">
-          <input type="checkbox" id="capTextDigitizingToggle">
-          <span class="slider"></span>
-        </label>
-        <label>Stitches</label>
-        <input type="number" id="capTextStitches" step="1" value="8000" style="width:80px;">
+    <div id="capLogos" style="display:none;">
+      <div class="logo-option">
+        <h4>Cap Back/Side (Flag)</h4>
+        <div>
+          <label>On/Off</label>
+          <label class="switch">
+            <input type="checkbox" id="capFlagLogoToggle">
+            <span class="slider"></span>
+          </label>
+          <label>Digitizing</label>
+          <label class="switch">
+            <input type="checkbox" id="capFlagDigitizingToggle">
+            <span class="slider"></span>
+          </label>
+          <label>Stitches</label>
+          <input type="number" id="capFlagStitches" step="1" value="8000" style="width:80px;">
+        </div>
+      </div>
+
+      <div class="logo-option">
+        <h4>Cap Back Text Only</h4>
+        <div>
+          <label>On/Off</label>
+          <label class="switch">
+            <input type="checkbox" id="capTextLogoToggle">
+            <span class="slider"></span>
+          </label>
+          <label>Digitizing</label>
+          <label class="switch">
+            <input type="checkbox" id="capTextDigitizingToggle">
+            <span class="slider"></span>
+          </label>
+          <label>Stitches</label>
+          <input type="number" id="capTextStitches" step="1" value="8000" style="width:80px;">
+        </div>
       </div>
     </div>
   </div>
@@ -452,7 +477,7 @@
     <div class="less-min-note" id="lessMinInfo"></div>
     <div class="note">
       Margin fixed at 40%. Blank cost after margin rounds to $0.25.<br>
-      Stitches >8k add $0.75/1000. No final rounding on total. For <24 qty: use next tier pricing + handling/digitizing.
+      Stitches >8k add $0.75/1000. No final rounding on total. For <24 qty: next tier + handling/digitizing if toggled.
     </div>
     <div class="matrix-toggle" id="matrixToggle">Show Pricing Matrix (Reference)</div>
     <div class="print-matrix" id="printMatrix"></div>
@@ -460,36 +485,20 @@
 </div>
 
 <script>
-// Hard-coded margin and embroidery costs:
+// Fixed margin and embroidery costs (hard-coded)
 const marginPercent = 40;
 const garmentEmbCosts = { "24-47":12.00, "48-71":11.00, "72+":10.00 };
 const capEmbCosts = { "24-71":10.00, "72-143":9.00, "144-288":8.00, "288+":7.50 };
 
-function isGarment(){return !productTypeToggle.checked;}
-function getTiersForProduct(){return isGarment()?["1-23","24-47","48-71","72+"] : ["1-23","24-71","72-143","144-288","288+"];}
-function getQuantityFromTier(tier){
-  if(isGarment()){
-    if(tier==='1-23')return 1;if(tier==='24-47')return 24;if(tier==='48-71')return 48;return 72;
-  } else {
-    if(tier==='1-23')return 1;if(tier==='24-71')return 24;if(tier==='72-143')return 72;if(tier==='144-288')return 144;return 288;
-  }
-}
-function getNextTierForLessMin(){return isGarment()? "24-47":"24-71";}
-function roundUpToQuarter(amount){
-  let cents=Math.round(amount*100);
-  let remainder=cents%25;
-  if(remainder>0)cents+=(25 - remainder);
-  return cents/100.0;
-}
-
+// Additional references
 const productTypeToggle=document.getElementById('productTypeToggle');
+const productSelectionStatus=document.getElementById('productSelectionStatus');
 const garmentCostInput=document.getElementById('garmentCost');
 const stitchCountInput=document.getElementById('stitchCount');
 const handlingFeeInput=document.getElementById('handlingFee');
 const digitizingFeeInput=document.getElementById('digitizingFee');
 const digitizingToggleMain=document.getElementById('digitizingToggleMain');
 
-// Logos
 const sleeveLogoToggle=document.getElementById('sleeveLogoToggle');
 const sleeveDigitizingToggle=document.getElementById('sleeveDigitizingToggle');
 const sleeveStitches=document.getElementById('sleeveStitches');
@@ -510,8 +519,10 @@ const capTextLogoToggle=document.getElementById('capTextLogoToggle');
 const capTextDigitizingToggle=document.getElementById('capTextDigitizingToggle');
 const capTextStitches=document.getElementById('capTextStitches');
 
-const additionalLogosSectionGarment=document.getElementById('additionalLogosSectionGarment');
-const additionalLogosSectionCap=document.getElementById('additionalLogosSectionCap');
+const additionalLogosBtn=document.getElementById('additionalLogosBtn');
+const additionalLogosSection=document.getElementById('additionalLogosSection');
+const garmentLogos=document.getElementById('garmentLogos');
+const capLogos=document.getElementById('capLogos');
 
 const calculateBtn=document.getElementById('calculateBtn');
 const changeNote=document.getElementById('changeNote');
@@ -524,44 +535,86 @@ const printMatrix=document.getElementById('printMatrix');
 
 let userHasCalculated=false;
 
+function isGarment(){return !productTypeToggle.checked;}
+function getTiersForProduct(){return isGarment()?["1-23","24-47","48-71","72+"] : ["1-23","24-71","72-143","144-288","288+"];}
+
+function getQuantityFromTier(tier){
+  if(isGarment()){
+    if(tier==='1-23')return 1;if(tier==='24-47')return 24;if(tier==='48-71')return 48;return 72;
+  } else {
+    if(tier==='1-23')return 1;if(tier==='24-71')return 24;if(tier==='72-143')return 72;if(tier==='144-288')return 144;return 288;
+  }
+}
+
+function getNextTierForLessMin(){return isGarment()? "24-47":"24-71";}
+
+function roundUpToQuarter(amount){
+  let cents=Math.round(amount*100);
+  let remainder=cents%25;
+  if(remainder>0)cents+=(25 - remainder);
+  return cents/100.0;
+}
+
 function markChanged(){
-  if(userHasCalculated)changeNote.style.display='block';
+  if(userHasCalculated) changeNote.style.display='block';
   confirmationMessage.style.display='none';
   resultsSection.style.display='none';
 }
 
-[garmentCostInput,stitchCountInput,handlingFeeInput,digitizingFeeInput,digitizingToggleMain,
- sleeveLogoToggle,sleeveDigitizingToggle,sleeveStitches,
- neckLogoToggle,neckDigitizingToggle,neckStitches,
- oppChestLogoToggle,oppChestDigitizingToggle,oppChestStitches,
- productTypeToggle,
- capFlagLogoToggle,capFlagDigitizingToggle,capFlagStitches,
- capTextLogoToggle,capTextDigitizingToggle,capTextStitches
+[
+  garmentCostInput,stitchCountInput,handlingFeeInput,digitizingFeeInput,digitizingToggleMain,
+  sleeveLogoToggle,sleeveDigitizingToggle,sleeveStitches,
+  neckLogoToggle,neckDigitizingToggle,neckStitches,
+  oppChestLogoToggle,oppChestDigitizingToggle,oppChestStitches,
+  productTypeToggle,
+  capFlagLogoToggle,capFlagDigitizingToggle,capFlagStitches,
+  capTextLogoToggle,capTextDigitizingToggle,capTextStitches
 ].forEach(el=>el.addEventListener('input',markChanged));
 
 productTypeToggle.addEventListener('change',()=>{
   updateProductTypeUI();
   if(userHasCalculated)showReferenceMatrix();
+  markChanged();
 });
 
+additionalLogosBtn.addEventListener('click',()=>{
+  if(additionalLogosSection.style.display==='none'||additionalLogosSection.style.display===''){
+    additionalLogosSection.style.display='block';
+  } else {
+    additionalLogosSection.style.display='none';
+  }
+  // update logos display based on product type
+  updateLogosDisplay();
+});
+
+function updateLogosDisplay(){
+  if(isGarment()){
+    garmentLogos.style.display='block';
+    capLogos.style.display='none';
+  } else {
+    garmentLogos.style.display='none';
+    capLogos.style.display='block';
+  }
+}
+
 calculateBtn.addEventListener('click',computePricing);
+
 matrixToggle.addEventListener('click',()=>{
   showReferenceMatrix();
   printMatrix.style.display=(printMatrix.style.display==='none'||printMatrix.style.display==='')?'block':'none';
 });
 
 function updateProductTypeUI(){
-  additionalLogosSectionGarment.style.display=isGarment()?'block':'none';
-  additionalLogosSectionCap.style.display=isGarment()?'none':'block';
+  productSelectionStatus.textContent = isGarment()?"Currently Selected: Garment":"Currently Selected: Cap";
+  updateLogosDisplay();
 }
 
 function showReferenceMatrix(){
-  // Show appropriate garment or cap pricing in the reference matrix
   if(isGarment()){
     printMatrix.innerHTML=`
       <h4>Garment Main Logo Pricing</h4>
       <table>
-        <thead><tr><th>Tier</th><th>Main Logo Cost (up to 8,000 stitches)</th></tr></thead>
+        <thead><tr><th>Tier</th><th>Main Logo Cost<br>(up to 8,000 stitches)</th></tr></thead>
         <tbody>
           <tr><td>24-47</td><td>$12.00</td></tr>
           <tr><td>48-71</td><td>$11.00</td></tr>
@@ -569,13 +622,13 @@ function showReferenceMatrix(){
         </tbody>
       </table>
       <h4>Garment Additional Logos</h4>
-      <p>Additional logos (sleeve, back-of-neck, opposite chest) use the same tier-based cost as the main logo.</p>
+      <p>Same tier-based cost as main logo.</p>
     `;
   } else {
     printMatrix.innerHTML=`
       <h4>Cap Main Logo Pricing</h4>
       <table>
-        <thead><tr><th>Tier</th><th>Main Logo Cost (up to 8,000 stitches)</th></tr></thead>
+        <thead><tr><th>Tier</th><th>Main Logo Cost<br>(up to 8,000 stitches)</th></tr></thead>
         <tbody>
           <tr><td>24-71</td><td>$10.00</td></tr>
           <tr><td>72-143</td><td>$9.00</td></tr>
@@ -623,25 +676,13 @@ function computePricing(){
     return;
   }
 
-  const isG=isGarment();
-
   resultsBody.innerHTML='';
   resultsSection.style.display='block';
 
-  // Hard-coded margin and embroidery costs:
-  // Margin fixed at 40%
+  const isG=isGarment();
   const marginPercent=40;
   const margin=marginPercent/100;
   const multiplier=1/(1-margin);
-
-  // Main Emb Costs from arrays:
-  // If garment:
-  //   "24-47":12.00,"48-71":11.00,"72+":10.00
-  // If cap:
-  //   "24-71":10.00,"72-143":9.00,"144-288":8.00,"288+":7.50
-
-  // We'll compute each tier now:
-  const tiers=getTiersForProduct();
 
   let logosData=[];
   if(isG){
@@ -653,6 +694,7 @@ function computePricing(){
     if(capTextLogoToggle.checked) logosData.push({name:'Cap Back Text',stCount:parseInt(capTextStitches.value)||8000,digitizingOn:capTextDigitizingToggle.checked,type:'cap-text'});
   }
 
+  const tiers=getTiersForProduct();
   tiers.forEach(tier=>{
     const row=document.createElement('tr');
     const tdTier=document.createElement('td');tdTier.textContent=tier;row.appendChild(tdTier);
@@ -697,7 +739,7 @@ function computePricing(){
 
   userHasCalculated=true;
   confirmationMessage.style.display='block';
-  showReferenceMatrix(); // Update reference matrix display when done calculating
+  showReferenceMatrix(); 
 }
 
 function showTierPricing(tier,exactQty,garmentCost,stitchCount,handlingFee,digitizingFee,digitizingOnMain,logosData,marginPercent){
@@ -726,21 +768,18 @@ function showTierPricing(tier,exactQty,garmentCost,stitchCount,handlingFee,digit
     effectiveTier=getNextTierForLessMin();
   }
 
-  // margin fixed at 40%
-  let margin=marginPercent/100;
-  let multiplier=1/(1-margin);
-  let preRoundBlankCost=garmentCost*multiplier;
-  let blankCost=roundUpToQuarter(preRoundBlankCost);
+  const margin=marginPercent/100;
+  const multiplier=1/(1-margin);
+  const preRoundBlankCost=garmentCost*multiplier;
+  const blankCost=roundUpToQuarter(preRoundBlankCost);
 
-  // Determine emb cost arrays used:
+  // Main Emb Cost based on tier:
   let mainEmbCost;
   if(isG){
-    // garmentEmbCosts
     if(effectiveTier==="24-47") mainEmbCost=garmentEmbCosts["24-47"];
     else if(effectiveTier==="48-71") mainEmbCost=garmentEmbCosts["48-71"];
     else mainEmbCost=garmentEmbCosts["72+"];
   } else {
-    // capEmbCosts
     if(effectiveTier==="24-71") mainEmbCost=capEmbCosts["24-71"];
     else if(effectiveTier==="72-143") mainEmbCost=capEmbCosts["72-143"];
     else if(effectiveTier==="144-288") mainEmbCost=capEmbCosts["144-288"];
@@ -751,13 +790,20 @@ function showTierPricing(tier,exactQty,garmentCost,stitchCount,handlingFee,digit
   let totalEmbCost=mainEmbCost+mainExtraSt;
   let embBreakdown=[`Main: $${mainEmbCost.toFixed(2)}${mainExtraSt>0?` (+$${mainExtraSt.toFixed(2)} extra)`:''}`];
 
+  function getCapFlagCost(tier){
+    if(tier==='24-71')return 8.00; if(tier==='72-143')return 7.00;if(tier==='144-288')return 6.00;return 5.50;
+  }
+  function getCapTextCost(tier){
+    if(tier==='24-71')return 7.00; if(tier==='72-143')return 6.00;if(tier==='144-288')return 5.00;return 4.00;
+  }
+
   logosData.forEach(logo=>{
     let extraSt=0;
     if(logo.stCount>8000) extraSt=Math.ceil((logo.stCount-8000)/1000)*0.75;
     let logoCost=mainEmbCost;
     if(!isG){
-      if(logo.type==='cap-flag')logoCost=getCapFlagCost(effectiveTier);
-      if(logo.type==='cap-text')logoCost=getCapTextCost(effectiveTier);
+      if(logo.type==='cap-flag') logoCost=getCapFlagCost(effectiveTier);
+      if(logo.type==='cap-text') logoCost=getCapTextCost(effectiveTier);
     }
     totalEmbCost += (logoCost+extraSt);
     embBreakdown.push(`${logo.name}: $${logoCost.toFixed(2)}${extraSt>0?` (+$${extraSt.toFixed(2)} extra)`:''}`);
